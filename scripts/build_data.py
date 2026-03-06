@@ -21,6 +21,87 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 
 BENCHMARK = "SPY"
+UNIVERSE_TXT_FILE = "universe.txt"
+UNIVERSE_MIN_PRICE = 5.0
+UNIVERSE_MIN_AVG_VOLUME = 300_000.0
+UNIVERSE_MIN_HISTORY_DAYS = 60
+UNIVERSE_LEADERS_COUNT = 25
+UNIVERSE_LAGGARDS_COUNT = 25
+
+# Fallback universe when data/universe.txt is missing.
+# This is intentionally broad (>=150) and liquid enough for a daily momentum scan.
+DEFAULT_UNIVERSE: list[str] = [
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "GOOG", "META", "TSLA", "AVGO", "BRK-B",
+    "LLY", "JPM", "V", "MA", "XOM", "UNH", "JNJ", "PG", "HD", "COST",
+    "MRK", "ABBV", "CVX", "KO", "PEP", "WMT", "CSCO", "ADBE", "CRM", "NFLX",
+    "AMD", "BAC", "TMO", "ACN", "DHR", "WFC", "ABT", "TXN", "LIN", "CMCSA",
+    "INTC", "VZ", "DIS", "AMGN", "QCOM", "NKE", "NEE", "BMY", "PM", "UNP",
+    "LOW", "HON", "MS", "IBM", "GS", "RTX", "CAT", "ORCL", "BA", "SPGI",
+    "MDT", "AMAT", "BLK", "NOW", "SBUX", "PLD", "ISRG", "GILD", "SCHW", "CVS",
+    "INTU", "DE", "C", "BKNG", "SYK", "TJX", "ADP", "LRCX", "ETN", "ADI",
+    "VRTX", "MO", "MDLZ", "PGR", "CB", "CME", "TMUS", "SO", "DUK", "PANW",
+    "AMT", "GE", "ZTS", "ICE", "CL", "EOG", "AON", "CI", "SHW", "MCO",
+    "REGN", "ITW", "HCA", "EQIX", "KLAC", "NSC", "FCX", "CSX", "FDX", "ADSK",
+    "AEP", "SNPS", "PH", "GD", "TGT", "MCK", "NOC", "MAR", "PSX", "USB",
+    "EMR", "SLB", "ROP", "SRE", "ECL", "ORLY", "CMG", "AZO", "WM", "MPC",
+    "PSA", "DLR", "TRV", "JCI", "ROST", "AIG", "AFL", "MET", "PRU", "MSI",
+    "CRWD", "SNOW", "ABNB", "UBER", "PLTR", "SHOP", "PYPL", "ROKU", "OKTA", "TWLO",
+    "TEAM", "MDB", "DDOG", "PATH", "NET", "ZS", "BILL", "ASAN", "ARM", "SMCI",
+    "CELH", "FSLR", "ENPH", "SEDG", "RUN", "SPWR", "CHPT", "IONQ", "RKLB", "JOBY",
+    "ACHR", "HOOD", "COIN", "MELI", "SE", "BABA", "PDD", "JD", "BIDU", "NTES",
+    "LI", "NIO", "XPEV", "TME", "VALE", "NEM", "GOLD", "TECK", "CCJ", "URA",
+    "SPY", "IVV", "VOO", "QQQ", "DIA", "IWM", "VTI", "VEA", "VWO", "EFA",
+    "EEM", "TLT", "IEF", "SHY", "BIL", "TIP", "HYG", "LQD", "JNK", "AGG",
+    "BND", "EMB", "MUB", "GLD", "SLV", "USO", "UNG", "DBC", "XLE", "XLF",
+    "XLK", "XLV", "XLI", "XLY", "XLP", "XLB", "XLU", "XLRE", "XLC", "RSP",
+    "SCHD", "VUG", "VTV", "VYM", "VNQ", "REET", "USMV", "MTUM", "SPLV", "QUAL",
+    "IWF", "IWD", "SMH", "SOXX", "IGV", "SKYY", "AIQ", "PAVE", "ARKK", "XBI",
+    "IBB", "KRE", "XOP", "OIH", "XRT", "ITA", "HACK", "CIBR", "KWEB", "MCHI",
+    "EWJ", "EWZ", "INDA", "FXI", "VGK", "EWC", "EWU", "EWI", "EWP", "EWD",
+    "EWH", "EWA", "EWQ", "EWT", "EWS", "EWY", "EWL", "EZA", "TUR", "ARGT",
+]
+
+TV_SPECIAL_SYMBOLS: dict[str, str] = {
+    "^VIX": "CBOE:VIX",
+    "^SPX": "SP:SPX",
+    "DXY": "TVC:DXY",
+}
+
+# Explicit TradingView mappings for frequently used ETFs/benchmarks.
+# These are used ahead of exchange inference to keep widget symbol loading stable.
+TV_TICKER_OVERRIDES: dict[str, str] = {
+    "SPY": "AMEX:SPY",
+    "QQQ": "NASDAQ:QQQ",
+    "TLT": "NASDAQ:TLT",
+    "IWM": "AMEX:IWM",
+    "GLD": "AMEX:GLD",
+    "SLV": "AMEX:SLV",
+    "XLE": "AMEX:XLE",
+    "XLF": "AMEX:XLF",
+    "XLK": "AMEX:XLK",
+    "XLV": "AMEX:XLV",
+    "XLI": "AMEX:XLI",
+    "XLY": "AMEX:XLY",
+    "XLP": "AMEX:XLP",
+    "XLU": "AMEX:XLU",
+    "XLB": "AMEX:XLB",
+    "XLRE": "AMEX:XLRE",
+    "XLC": "AMEX:XLC",
+}
+
+YAHOO_EXCHANGE_TO_TV: dict[str, str] = {
+    "PCX": "NYSEARCA",
+    "ASE": "NYSEARCA",
+    "ARCX": "NYSEARCA",
+    "NYQ": "NYSE",
+    "NMS": "NASDAQ",
+    "NCM": "NASDAQ",
+    "NGM": "NASDAQ",
+    "NAS": "NASDAQ",
+    "NASDAQ": "NASDAQ",
+    "NYSE": "NYSE",
+    "AMEX": "AMEX",
+}
 
 # Keep display symbols stable in UI while mapping to yfinance sources.
 DATA_SOURCE_TICKER: dict[str, str] = {
@@ -93,7 +174,6 @@ GROUPS: dict[str, list[str]] = {
     "US Sectors": ["XLK", "XLF", "XLE", "XLV", "XLI", "XLY", "XLP", "XLU", "XLB", "XLRE", "XLC"],
     "Style & Size": ["QQQ", "IWM", "IWF", "IWD", "MTUM", "USMV"],
     "AI & Infrastructure": ["SMH", "SOXX", "IGV", "SKYY", "AIQ", "PAVE"],
-    "Momentum & Leadership": ["NVDA", "AVGO", "SMCI", "AMD", "META", "TSLA", "LLY", "CELH", "ARM", "COST"],
     "Defensives & Staples": ["XLP", "XLU", "XLV", "USMV", "SPLV", "BIL"],
     "Commodities & Real Assets": ["GLD", "SLV", "USO", "DBC", "VNQ", "REET", "TIP"],
     "Global / Countries": ["EFA", "EEM", "EWJ", "EWZ", "INDA", "FXI", "VGK", "EWC"],
@@ -133,6 +213,8 @@ GENERIC_NAME_PREFIXES = [
     "iShares",
     "Invesco",
     "Vanguard",
+    "State Street",
+    "Select Sector",
     "SPDR",
     "SPDR®",
     "Global X",
@@ -146,6 +228,13 @@ GENERIC_NAME_WORDS = [
     "Fund",
     "Index",
     "Portfolio",
+]
+
+GENERIC_NAME_PHRASES = [
+    "State Street",
+    "Select Sector",
+    "SPDR",
+    "SPDR®",
 ]
 
 
@@ -204,6 +293,9 @@ def build_short_name(name: str, ticker: str, max_chars: int = 24) -> str:
         pattern = r"^\s*" + re.escape(prefix.replace("®", "")) + r"\s+"
         short = re.sub(pattern, "", short, flags=re.IGNORECASE)
 
+    phrase_pattern = r"(?:%s)" % "|".join(re.escape(phrase.replace("®", "")) for phrase in GENERIC_NAME_PHRASES)
+    short = re.sub(phrase_pattern, "", short, flags=re.IGNORECASE)
+
     word_pattern = r"\b(?:%s)\b" % "|".join(re.escape(word) for word in GENERIC_NAME_WORDS)
     short = re.sub(word_pattern, "", short, flags=re.IGNORECASE)
     short = re.sub(r"\s{2,}", " ", short).strip(" ,.-")
@@ -218,7 +310,7 @@ def build_short_name(name: str, ticker: str, max_chars: int = 24) -> str:
     return short
 
 
-def build_universe() -> tuple[list[str], dict[str, str]]:
+def build_universe(extra_display_tickers: list[str] | None = None) -> tuple[list[str], dict[str, str]]:
     seen: set[str] = set()
     source_tickers: list[str] = []
     source_to_display: dict[str, str] = {}
@@ -235,7 +327,118 @@ def build_universe() -> tuple[list[str], dict[str, str]]:
     if benchmark_source not in seen:
         source_tickers.append(benchmark_source)
 
+    for display in extra_display_tickers or []:
+        source = source_ticker(display)
+        source_to_display[source] = display
+        if source not in seen:
+            source_tickers.append(source)
+            seen.add(source)
+
     return source_tickers, source_to_display
+
+
+def normalize_universe_ticker(raw: str) -> str:
+    ticker = raw.strip().upper()
+    return ticker.replace(".", "-")
+
+
+def load_universe_tickers(path: Path) -> list[str]:
+    """Load universe tickers from `data/universe.txt` with # comment support."""
+
+    if not path.exists():
+        return list(DEFAULT_UNIVERSE)
+
+    tickers: list[str] = []
+    seen: set[str] = set()
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        ticker = normalize_universe_ticker(line)
+        if not ticker:
+            continue
+        if ticker in seen:
+            continue
+        seen.add(ticker)
+        tickers.append(ticker)
+
+    return tickers or list(DEFAULT_UNIVERSE)
+
+
+def map_exchange_hint(exchange_code: Any) -> str | None:
+    if exchange_code is None:
+        return None
+    code = str(exchange_code).strip().upper()
+    if not code:
+        return None
+    return YAHOO_EXCHANGE_TO_TV.get(code)
+
+
+def resolve_tradingview_symbol(ticker: str, exchange_code: Any) -> tuple[str | None, str]:
+    if ticker in TV_SPECIAL_SYMBOLS:
+        return None, TV_SPECIAL_SYMBOLS[ticker]
+    if ticker in TV_TICKER_OVERRIDES:
+        resolved = TV_TICKER_OVERRIDES[ticker]
+        exchange_hint = resolved.split(":", 1)[0] if ":" in resolved else None
+        return exchange_hint, resolved
+    if ticker.startswith("^"):
+        return None, f"TVC:{ticker.replace('^', '')}"
+
+    exchange_hint = map_exchange_hint(exchange_code)
+    if exchange_hint:
+        return exchange_hint, f"{exchange_hint}:{ticker}"
+    return None, ticker
+
+
+def fetch_symbol_identity(display_tickers: list[str]) -> dict[str, dict[str, Any]]:
+    """
+    Resolve lightweight per-symbol identity payload:
+    - display name
+    - exchange_hint
+    - tradingview_symbol
+    """
+
+    identity: dict[str, dict[str, Any]] = {}
+    seen: set[str] = set()
+    for ticker in display_tickers:
+        if ticker in seen:
+            continue
+        seen.add(ticker)
+
+        source = source_ticker(ticker)
+        fallback_name = NAME_OVERRIDES.get(ticker, ticker)
+        exchange_code = None
+        info: dict[str, Any] = {}
+
+        ticker_obj = yf.Ticker(source)
+        try:
+            fast_info = ticker_obj.fast_info
+            if isinstance(fast_info, dict):
+                exchange_code = fast_info.get("exchange")
+        except Exception:
+            fast_info = {}
+
+        try:
+            info = ticker_obj.get_info()
+        except Exception:
+            info = {}
+
+        if not exchange_code and isinstance(info, dict):
+            exchange_code = info.get("exchange")
+
+        yf_name = None
+        if isinstance(info, dict):
+            yf_name = info.get("longName") or info.get("shortName")
+
+        name = sanitize_name(yf_name, fallback_name)
+        exchange_hint, tradingview_symbol = resolve_tradingview_symbol(ticker, exchange_code)
+        identity[ticker] = {
+            "name": name,
+            "exchange_hint": exchange_hint,
+            "tradingview_symbol": tradingview_symbol,
+        }
+
+    return identity
 
 
 def _standardize_frame(frame: pd.DataFrame) -> pd.DataFrame:
@@ -430,11 +633,18 @@ def build_intraday_last(intraday_frames: dict[str, pd.DataFrame]) -> dict[str, f
     return latest
 
 
-def empty_row(ticker: str, name: str) -> dict[str, Any]:
+def empty_row(
+    ticker: str,
+    name: str,
+    exchange_hint: str | None = None,
+    tradingview_symbol: str | None = None,
+) -> dict[str, Any]:
     long_short = LEVERAGED_MAP.get(ticker)
     full_name = sanitize_name(name, ticker)
     return {
         "ticker": ticker,
+        "exchange_hint": exchange_hint,
+        "tradingview_symbol": tradingview_symbol or ticker,
         "name": full_name,
         "short_name": build_short_name(full_name, ticker),
         "last": 0.0,
@@ -446,6 +656,8 @@ def empty_row(ticker: str, name: str) -> dict[str, Any]:
         "dist50_atr": 0.0,
         "rs1m": 0.0,
         "trend_grade": "B",
+        "above_20d": False,
+        "above_50d": False,
         "leveraged": {
             "long": long_short[0] if long_short else None,
             "short": long_short[1] if long_short else None,
@@ -457,15 +669,18 @@ def empty_row(ticker: str, name: str) -> dict[str, Any]:
 def build_row(
     ticker: str,
     name: str,
+    exchange_hint: str | None,
+    tradingview_symbol: str | None,
     daily_frames: dict[str, pd.DataFrame],
     intraday_last: dict[str, float],
     spy_close: pd.Series,
     chart_dir: Path,
+    build_chart: bool = True,
 ) -> dict[str, Any]:
     source = source_ticker(ticker)
     frame = daily_frames.get(source)
 
-    row = empty_row(ticker, name)
+    row = empty_row(ticker, name, exchange_hint=exchange_hint, tradingview_symbol=tradingview_symbol)
     if frame is None or frame.empty or "Close" not in frame:
         return row
 
@@ -487,10 +702,14 @@ def build_row(
 
     atr = compute_atr(frame, window=14)
     trend_grade, _, _, sma50 = compute_trend_grade(close)
+    sma20 = close.rolling(window=20, min_periods=20).mean().iloc[-1] if len(close) >= 20 else np.nan
 
     dist50_atr = 0.0
     if atr is not None and atr > 0 and sma50 is not None:
         dist50_atr = (last_close - float(sma50)) / atr
+
+    above_20d = bool(np.isfinite(sma20) and last_close > float(sma20))
+    above_50d = bool(sma50 is not None and np.isfinite(sma50) and last_close > float(sma50))
 
     row.update(
         {
@@ -503,11 +722,34 @@ def build_row(
             "dist50_atr": safe_float(dist50_atr, digits=2, default=0.0),
             "rs1m": safe_float(compute_vol_adjusted_rs(close, spy_close, lookback=20), digits=3, default=0.0),
             "trend_grade": trend_grade,
-            "mini_rs_chart": make_rs_chart(ticker, close, spy_close, chart_dir),
+            "above_20d": above_20d,
+            "above_50d": above_50d,
+            "mini_rs_chart": make_rs_chart(ticker, close, spy_close, chart_dir) if build_chart else "",
         }
     )
 
     return row
+
+
+def ensure_row_chart(
+    row: dict[str, Any],
+    daily_frames: dict[str, pd.DataFrame],
+    spy_close: pd.Series,
+    chart_dir: Path,
+) -> None:
+    """Create a mini RS chart only when needed for rendered rows."""
+
+    if row.get("mini_rs_chart"):
+        return
+
+    source = source_ticker(str(row.get("ticker", "")))
+    frame = daily_frames.get(source)
+    if frame is None or frame.empty or "Close" not in frame:
+        return
+    close = frame["Close"].dropna()
+    if close.empty:
+        return
+    row["mini_rs_chart"] = make_rs_chart(str(row.get("ticker", "")), close, spy_close, chart_dir)
 
 
 def top_n_leaders(rows_by_ticker: dict[str, dict[str, Any]], tickers: list[str], limit: int = 3) -> list[dict[str, Any]]:
@@ -519,6 +761,47 @@ def top_n_leaders(rows_by_ticker: dict[str, dict[str, Any]], tickers: list[str],
         ranked.append({"ticker": ticker, "name": row["name"], "rs1m": row["rs1m"]})
     ranked.sort(key=lambda item: item["rs1m"], reverse=True)
     return ranked[:limit]
+
+
+def universe_candidate_ok(row: dict[str, Any], frame: pd.DataFrame | None) -> bool:
+    """Apply minimum liquidity/history filters for universe momentum ranking."""
+
+    if frame is None or frame.empty or "Close" not in frame:
+        return False
+    close = frame["Close"].dropna()
+    if len(close) < UNIVERSE_MIN_HISTORY_DAYS:
+        return False
+
+    last = finite_metric(row.get("last"))
+    if last is None or last <= UNIVERSE_MIN_PRICE:
+        return False
+
+    if "Volume" in frame.columns:
+        vol = frame["Volume"].dropna().tail(20)
+        if not vol.empty:
+            avg_volume = finite_metric(vol.mean())
+            if avg_volume is not None and avg_volume <= UNIVERSE_MIN_AVG_VOLUME:
+                return False
+
+    return True
+
+
+def leaderboard_meta_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    payload: list[dict[str, Any]] = []
+    for row in rows:
+        payload.append(
+            {
+                "ticker": row["ticker"],
+                "short_name": row["short_name"],
+                "name": row["name"],
+                "price": row["last"],
+                "intra_pct": row["intra_pct"],
+                "rs1m": row["rs1m"],
+                "trend_grade": row["trend_grade"],
+                "tradingview_symbol": row.get("tradingview_symbol", row["ticker"]),
+            }
+        )
+    return payload
 
 
 def next_business_days(start: date, count: int) -> list[date]:
@@ -603,6 +886,8 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 def validate_snapshot_rows(groups_payload: list[dict[str, Any]]) -> None:
     required_keys = {
         "ticker",
+        "exchange_hint",
+        "tradingview_symbol",
         "name",
         "short_name",
         "last",
@@ -614,6 +899,8 @@ def validate_snapshot_rows(groups_payload: list[dict[str, Any]]) -> None:
         "dist50_atr",
         "rs1m",
         "trend_grade",
+        "above_20d",
+        "above_50d",
         "leveraged",
     }
 
@@ -624,8 +911,18 @@ def validate_snapshot_rows(groups_payload: list[dict[str, Any]]) -> None:
                 raise ValueError(f"Row for {row.get('ticker', 'UNKNOWN')} missing keys: {sorted(missing)}")
             if not str(row.get("name", "")).strip():
                 raise ValueError(f"Row for {row.get('ticker', 'UNKNOWN')} has blank name.")
+            exchange_hint = row.get("exchange_hint")
+            if exchange_hint is not None and not isinstance(exchange_hint, str):
+                raise ValueError(f"Row for {row['ticker']} has invalid exchange_hint value.")
+            tv_symbol = row.get("tradingview_symbol")
+            if not isinstance(tv_symbol, str) or not tv_symbol.strip():
+                raise ValueError(f"Row for {row['ticker']} has invalid tradingview_symbol value.")
             if row["trend_grade"] not in {"A", "B", "C"}:
                 raise ValueError(f"Row for {row['ticker']} has invalid trend grade: {row['trend_grade']}")
+            if not isinstance(row.get("above_20d"), bool):
+                raise ValueError(f"Row for {row['ticker']} has invalid above_20d value.")
+            if not isinstance(row.get("above_50d"), bool):
+                raise ValueError(f"Row for {row['ticker']} has invalid above_50d value.")
             leveraged = row.get("leveraged")
             if not isinstance(leveraged, dict) or not {"long", "short"}.issubset(leveraged.keys()):
                 raise ValueError(f"Row for {row['ticker']} has invalid leveraged payload.")
@@ -639,6 +936,10 @@ def finite_metric(value: Any) -> float | None:
     if not math.isfinite(metric):
         return None
     return metric
+
+
+def clamp_float(value: float, low: float, high: float) -> float:
+    return max(low, min(high, value))
 
 
 def median_metric(rows: list[dict[str, Any]], key: str) -> float | None:
@@ -725,6 +1026,7 @@ def build_market_status(groups_payload: list[dict[str, Any]]) -> dict[str, Any]:
     # Sentiment from intraday breadth.
     intra_values = [finite_metric(row.get("intra_pct")) for row in rows]
     valid_intra = [value for value in intra_values if value is not None]
+    positive_intra_pct = 0.0
     if not valid_intra:
         sentiment = "Neutral"
     else:
@@ -746,6 +1048,38 @@ def build_market_status(groups_payload: list[dict[str, Any]]) -> dict[str, Any]:
     else:
         momentum = "Neutral"
 
+    # Breadth from moving-average participation.
+    above_20d_count = sum(1 for row in rows if bool(row.get("above_20d")))
+    above_50d_count = sum(1 for row in rows if bool(row.get("above_50d")))
+    above_20d_pct = (above_20d_count / row_count * 100.0) if row_count else 0.0
+    above_50d_pct = (above_50d_count / row_count * 100.0) if row_count else 0.0
+
+    if above_50d_pct >= 60.0:
+        breadth_label = "Strong"
+    elif above_50d_pct >= 40.0:
+        breadth_label = "Mixed"
+    else:
+        breadth_label = "Weak"
+
+    # Momentum environment score.
+    vix_score = 10.0
+    if volatility == "Low":
+        vix_score = 25.0
+    elif volatility == "High":
+        vix_score = 0.0
+    score_float = 0.0
+    score_float += 50.0 * clamp_float(above_50d_pct / 100.0, 0.0, 1.0)
+    score_float += vix_score
+    score_float += 25.0 * clamp_float(positive_intra_pct / 100.0, 0.0, 1.0)
+    momentum_env_score = int(round(clamp_float(score_float, 0.0, 100.0)))
+
+    if momentum_env_score >= 70:
+        momentum_env_label = "Momentum-Friendly"
+    elif momentum_env_score >= 45:
+        momentum_env_label = "Selective"
+    else:
+        momentum_env_label = "Choppy"
+
     return {
         "exposure": {
             "level": exposure_level,
@@ -757,6 +1091,15 @@ def build_market_status(groups_payload: list[dict[str, Any]]) -> dict[str, Any]:
             "sentiment": sentiment,
             "momentum": momentum,
         },
+        "breadth": {
+            "above_20d_pct": safe_float(above_20d_pct, digits=2, default=0.0),
+            "above_50d_pct": safe_float(above_50d_pct, digits=2, default=0.0),
+            "breadth_label": breadth_label,
+        },
+        "momentum_env": {
+            "score": momentum_env_score,
+            "label": momentum_env_label,
+        },
     }
 
 
@@ -767,8 +1110,12 @@ def validate_market_status(status: dict[str, Any]) -> None:
     exposure = status.get("exposure", {})
     trend = status.get("trend", {})
     risk = status.get("risk", {})
+    breadth = status.get("breadth", {})
+    momentum_env = status.get("momentum_env", {})
     if not isinstance(exposure, dict) or not isinstance(trend, dict) or not isinstance(risk, dict):
         raise ValueError("status payload sections are malformed")
+    if not isinstance(breadth, dict) or not isinstance(momentum_env, dict):
+        raise ValueError("status breadth/momentum_env sections are malformed")
 
     level = exposure.get("level")
     guidance = exposure.get("guidance")
@@ -791,6 +1138,22 @@ def validate_market_status(status: dict[str, Any]) -> None:
     if risk.get("momentum") not in {"Positive", "Neutral", "Negative"}:
         raise ValueError("status.risk.momentum invalid")
 
+    above_20d_pct = finite_metric(breadth.get("above_20d_pct"))
+    above_50d_pct = finite_metric(breadth.get("above_50d_pct"))
+    if above_20d_pct is None or not (0.0 <= above_20d_pct <= 100.0):
+        raise ValueError("status.breadth.above_20d_pct invalid")
+    if above_50d_pct is None or not (0.0 <= above_50d_pct <= 100.0):
+        raise ValueError("status.breadth.above_50d_pct invalid")
+    if breadth.get("breadth_label") not in {"Strong", "Mixed", "Weak"}:
+        raise ValueError("status.breadth.breadth_label invalid")
+
+    score = momentum_env.get("score")
+    label = momentum_env.get("label")
+    if not isinstance(score, int) or score < 0 or score > 100:
+        raise ValueError("status.momentum_env.score invalid")
+    if label not in {"Momentum-Friendly", "Selective", "Choppy"}:
+        raise ValueError("status.momentum_env.label invalid")
+
 
 def build_data(output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -801,7 +1164,10 @@ def build_data(output_dir: Path) -> None:
         old_chart.unlink(missing_ok=True)
 
     now_utc = datetime.now(timezone.utc)
-    source_tickers, source_to_display = build_universe()
+
+    universe_tickers = load_universe_tickers(output_dir / UNIVERSE_TXT_FILE)
+
+    source_tickers, _ = build_universe(extra_display_tickers=universe_tickers)
 
     daily_frames = download_history(source_tickers, period="12mo", interval="1d")
     intraday_frames = download_history(source_tickers, period="2d", interval="5m")
@@ -816,17 +1182,25 @@ def build_data(output_dir: Path) -> None:
     if spy_close.empty:
         raise RuntimeError("SPY close series is empty. Cannot compute relative strength metrics.")
 
-    name_map = fetch_name_map(source_tickers, source_to_display)
+    # Resolve identity (name/exchange/tv symbol) for rendered core groups.
+    core_display_tickers: list[str] = []
+    for tickers in GROUPS.values():
+        core_display_tickers.extend(tickers)
+    core_identity = fetch_symbol_identity(core_display_tickers)
 
-    groups_payload: list[dict[str, Any]] = []
+    base_groups_payload: list[dict[str, Any]] = []
     rows_by_ticker: dict[str, dict[str, Any]] = {}
 
     for group_name, tickers in GROUPS.items():
         rows: list[dict[str, Any]] = []
         for ticker in tickers:
+            identity = core_identity.get(ticker, {})
+            resolved_name = sanitize_name(identity.get("name"), NAME_OVERRIDES.get(ticker, ticker))
             row = build_row(
                 ticker=ticker,
-                name=name_map.get(ticker, NAME_OVERRIDES.get(ticker, ticker)),
+                name=resolved_name,
+                exchange_hint=identity.get("exchange_hint"),
+                tradingview_symbol=identity.get("tradingview_symbol", ticker),
                 daily_frames=daily_frames,
                 intraday_last=intraday_last,
                 spy_close=spy_close,
@@ -834,8 +1208,49 @@ def build_data(output_dir: Path) -> None:
             )
             rows.append(row)
             rows_by_ticker[ticker] = row
-        groups_payload.append({"name": group_name, "rows": rows})
+        base_groups_payload.append({"name": group_name, "rows": rows})
 
+    universe_rows: list[dict[str, Any]] = []
+    for ticker in universe_tickers:
+        row = build_row(
+            ticker=ticker,
+            name=sanitize_name(NAME_OVERRIDES.get(ticker, ticker), ticker),
+            exchange_hint=None,
+            tradingview_symbol=ticker,
+            daily_frames=daily_frames,
+            intraday_last=intraday_last,
+            spy_close=spy_close,
+            chart_dir=mini_chart_dir,
+            build_chart=False,
+        )
+        universe_rows.append(row)
+
+    eligible_universe_rows: list[dict[str, Any]] = []
+    for row in universe_rows:
+        frame = daily_frames.get(source_ticker(row["ticker"]))
+        if universe_candidate_ok(row, frame):
+            eligible_universe_rows.append(row)
+
+    leaders_universe_rows = sorted(eligible_universe_rows, key=lambda row: row["rs1m"], reverse=True)[:UNIVERSE_LEADERS_COUNT]
+    lagging_universe_rows = sorted(eligible_universe_rows, key=lambda row: row["rs1m"])[:UNIVERSE_LAGGARDS_COUNT]
+
+    # Resolve yfinance identity for displayed leaderboard entries.
+    leaderboard_tickers = list(dict.fromkeys([row["ticker"] for row in leaders_universe_rows + lagging_universe_rows]))
+    leaderboard_identity = fetch_symbol_identity(leaderboard_tickers)
+    for row in leaders_universe_rows + lagging_universe_rows:
+        identity = leaderboard_identity.get(row["ticker"], {})
+        resolved_name = sanitize_name(identity.get("name"), row["ticker"])
+        row["name"] = resolved_name
+        row["short_name"] = build_short_name(resolved_name, row["ticker"])
+        row["exchange_hint"] = identity.get("exchange_hint")
+        row["tradingview_symbol"] = identity.get("tradingview_symbol", row["ticker"])
+
+    # Charts for universe rows are generated only for displayed leaders/lagging entries.
+    chart_rows = leaders_universe_rows + lagging_universe_rows
+    for row in chart_rows:
+        ensure_row_chart(row, daily_frames, spy_close, mini_chart_dir)
+
+    groups_payload = base_groups_payload
     validate_snapshot_rows(groups_payload)
 
     leaders = {
@@ -857,10 +1272,26 @@ def build_data(output_dir: Path) -> None:
         "app": "CLOUD & CAPITAL - Market Tape",
         "generated_at_utc": to_utc_iso(now_utc),
         "benchmark": BENCHMARK,
-        "group_count": len(GROUPS),
-        "instrument_count": len(source_tickers),
+        "group_count": len(groups_payload),
+        "instrument_count": sum(len(group["rows"]) for group in groups_payload),
         "leaders": leaders,
         "status": status,
+        "universe_stats": {
+            "tickers_total": len(universe_tickers),
+            "tickers_used": len(eligible_universe_rows),
+            "filtered_out_count": max(0, len(universe_tickers) - len(eligible_universe_rows)),
+            "generated_at_utc": to_utc_iso(now_utc),
+        },
+        "leaderboard": {
+            "leaders": leaderboard_meta_rows(leaders_universe_rows),
+            "laggards": leaderboard_meta_rows(lagging_universe_rows),
+            "universe_count": len(eligible_universe_rows),
+        },
+        # Backward-compatible alias used by older frontend revisions.
+        "momentum": {
+            "leaders": leaderboard_meta_rows(leaders_universe_rows),
+            "lagging": leaderboard_meta_rows(lagging_universe_rows),
+        },
         "data_files": {
             "snapshot": "data/snapshot.json",
             "events": "data/events.json",
