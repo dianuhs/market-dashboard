@@ -435,9 +435,9 @@
       }
 
       table {
-        width: 100%;
+        width: max-content;
         border-collapse: collapse;
-        min-width: 700px;
+        min-width: 0;
         font-variant-numeric: tabular-nums;
       }
 
@@ -451,7 +451,7 @@
         color: var(--muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        padding: 5px 4px;
+        padding: 5px 3px;
         white-space: nowrap;
       }
 
@@ -474,7 +474,7 @@
 
       tbody td {
         border-bottom: 1px solid var(--line);
-        padding: 5px 4px;
+        padding: 5px 3px;
         font-size: 0.8rem;
         font-weight: 400;
         white-space: nowrap;
@@ -507,7 +507,7 @@
       }
 
       .cell-name {
-        max-width: 164px;
+        max-width: 156px;
       }
 
       .name-text {
@@ -559,12 +559,12 @@
 
       .rs-mini {
         height: 18px;
-        width: 44px;
+        width: 38px;
         object-fit: contain;
       }
 
       .cell-mini-rs {
-        width: 56px;
+        width: 46px;
       }
 
       .letf-wrap {
@@ -1116,17 +1116,18 @@
       };
 
       const TABLE_COLUMNS = [
-        { key: "ticker", label: "Ticker", sortable: true, numeric: false, type: "text", width: 64 },
-        { key: "trend_grade", label: "Grade", sortable: true, numeric: false, type: "grade", width: 50 },
-        { key: "name", label: "Name", sortable: true, numeric: false, type: "text", width: 168 },
-        { key: "last", label: "Price", sortable: true, numeric: true, pct: false, width: 62 },
-        { key: "intra_pct", label: "Intra%", sortable: true, numeric: true, pct: true, width: 60 },
-        { key: "d1_pct", label: "1D%", sortable: true, numeric: true, pct: true, width: 56 },
-        { key: "d5_pct", label: "5D%", sortable: true, numeric: true, pct: true, width: 56 },
-        { key: "d20_pct", label: "20D%", sortable: true, numeric: true, pct: true, width: 60 },
-        { key: "atr_pct", label: "ATR", sortable: true, numeric: true, pct: true, width: 52 },
-        { key: "dist50_atr", label: "D50/ATR", sortable: true, numeric: true, pct: false, width: 64 },
-        { key: "rs1m", label: "RS1M", sortable: true, numeric: true, pct: false, decimals: 3, width: 58 },
+        { key: "ticker", label: "Ticker", sortable: true, numeric: false, type: "text", width: 62 },
+        { key: "trend_grade", label: "Grade", sortable: true, numeric: false, type: "grade", width: 48 },
+        { key: "name", label: "Name", sortable: true, numeric: false, type: "text", width: 152 },
+        { key: "last", label: "Price", sortable: true, numeric: true, pct: false, width: 58 },
+        { key: "intra_pct", label: "Intra%", sortable: true, numeric: true, pct: true, width: 56 },
+        { key: "d1_pct", label: "1D%", sortable: true, numeric: true, pct: true, width: 52 },
+        { key: "d5_pct", label: "5D%", sortable: true, numeric: true, pct: true, width: 52 },
+        { key: "d20_pct", label: "20D%", sortable: true, numeric: true, pct: true, width: 56 },
+        { key: "atr_pct", label: "ATR", sortable: true, numeric: true, pct: true, width: 48 },
+        { key: "dist50_atr", label: "D50/ATR", sortable: true, numeric: true, pct: false, width: 60 },
+        { key: "rs1m", label: "RS1M", sortable: true, numeric: true, pct: false, decimals: 3, width: 54 },
+        { key: "mini_rs_chart", label: "Mini", sortable: false, numeric: false, type: "spark", width: 46 },
       ];
 
       const state = {
@@ -1771,7 +1772,7 @@
           const colgroup = document.createElement("colgroup");
           TABLE_COLUMNS.forEach((column) => {
             const col = document.createElement("col");
-            if (column.key !== "name" && column.width) {
+            if (column.width) {
               col.style.width = `${column.width}px`;
             }
             colgroup.appendChild(col);
@@ -1783,7 +1784,7 @@
 
           TABLE_COLUMNS.forEach((column) => {
             const th = document.createElement("th");
-            if (column.key !== "name" && column.width) {
+            if (column.width) {
               th.style.width = `${column.width}px`;
             }
             if (column.sortable) {
