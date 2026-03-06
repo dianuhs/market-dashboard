@@ -97,6 +97,9 @@
         width: 100%;
         margin: 0 auto;
         padding: 18px 20px 22px;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
       .top-header {
@@ -230,6 +233,9 @@
         gap: 14px;
         grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.95fr);
         align-items: start;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
       .layout > * {
@@ -238,6 +244,8 @@
 
       .left-panel {
         min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
       .momentum-universe-card {
@@ -406,6 +414,8 @@
         overflow: hidden;
         background: var(--card-bg);
         box-shadow: var(--shadow);
+        min-width: 0;
+        max-width: 100%;
       }
 
       .group h3 {
@@ -418,6 +428,8 @@
       }
 
       .table-wrap {
+        min-width: 0;
+        max-width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
       }
@@ -425,7 +437,7 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 760px;
+        min-width: 700px;
         font-variant-numeric: tabular-nums;
       }
 
@@ -1115,7 +1127,6 @@
         { key: "atr_pct", label: "ATR", sortable: true, numeric: true, pct: true, width: 52 },
         { key: "dist50_atr", label: "D50/ATR", sortable: true, numeric: true, pct: false, width: 64 },
         { key: "rs1m", label: "RS1M", sortable: true, numeric: true, pct: false, decimals: 3, width: 58 },
-        { key: "mini_rs_chart", label: "Mini", sortable: false, numeric: false, type: "spark", width: 50 },
       ];
 
       const state = {
