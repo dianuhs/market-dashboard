@@ -19,27 +19,43 @@
         --bg: #f5eee9;
         --surface: #fdf8f2;
         --surface-2: #f8f1e8;
+        --card-bg: #ffffff;
+        --pill-bg: #ffffff;
+        --pill-border: rgba(0, 0, 0, 0.08);
         --text: #1e2329;
         --muted: #665d53;
         --line: rgba(24, 30, 36, 0.09);
         --accent: #8d6f47;
         --positive: #0e8a54;
         --negative: #b23a3a;
+        --status-pill-bg: rgba(15, 23, 42, 0.08);
+        --status-tile-bg: rgba(148, 163, 184, 0.08);
+        --row-alt: rgba(125, 161, 201, 0.045);
+        --row-hover: rgba(118, 193, 255, 0.1);
+        --row-selected: rgba(118, 193, 255, 0.18);
         --shadow: 0 12px 28px rgba(35, 29, 21, 0.08);
         --brand-ink: rgba(48, 60, 78, 0.1);
         --brand-warm: rgba(170, 133, 84, 0.2);
       }
 
       html[data-theme="dark"] {
-        --bg: #0a111a;
-        --surface: #111c2a;
-        --surface-2: #172638;
-        --text: #ecf2f8;
-        --muted: #9fb0c3;
-        --line: #3a4756;
+        --bg: #0b121c;
+        --surface: #121d2b;
+        --surface-2: #1a2a3d;
+        --card-bg: #121d2b;
+        --pill-bg: #182638;
+        --pill-border: rgba(159, 176, 195, 0.24);
+        --text: #e9f0f7;
+        --muted: #a5b6c9;
+        --line: rgba(159, 176, 195, 0.2);
         --accent: #76c1ff;
         --positive: #36d27f;
         --negative: #ff6c6c;
+        --status-pill-bg: rgba(148, 163, 184, 0.18);
+        --status-tile-bg: rgba(148, 163, 184, 0.12);
+        --row-alt: rgba(96, 130, 167, 0.14);
+        --row-hover: rgba(118, 193, 255, 0.16);
+        --row-selected: rgba(118, 193, 255, 0.24);
         --shadow: 0 18px 38px rgba(0, 0, 0, 0.38);
         --brand-ink: rgba(96, 135, 171, 0.2);
         --brand-warm: rgba(170, 138, 89, 0.18);
@@ -53,7 +69,7 @@
       body {
         margin: 0;
         padding: 0;
-        background: #f5eee9;
+        background: var(--bg);
       }
 
       body {
@@ -63,17 +79,17 @@
       }
 
       .dashboard {
-        background: #f5eee9;
+        background: var(--bg);
       }
 
       .card {
-        background: #ffffff;
+        background: var(--card-bg);
         border-radius: 14px;
       }
 
       .pill {
-        background: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
       }
 
       .shell {
@@ -145,7 +161,7 @@
       }
 
       .leadership {
-        background: #ffffff;
+        background: var(--card-bg);
         border: 1px solid var(--line);
         border-radius: 14px;
         box-shadow: var(--shadow);
@@ -174,8 +190,8 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        background: #ffffff;
+        border: 1px solid var(--pill-border);
+        background: var(--pill-bg);
         border-radius: 999px;
         padding: 3px 9px 3px 6px;
         font-size: 0.8rem;
@@ -229,7 +245,7 @@
         border-radius: 14px;
         padding: 10px 12px;
         margin-bottom: 10px;
-        background: #ffffff;
+        background: var(--card-bg);
         box-shadow: var(--shadow);
       }
 
@@ -275,9 +291,9 @@
       }
 
       .momentum-pill {
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--pill-border);
         border-radius: 999px;
-        background: #ffffff;
+        background: var(--pill-bg);
         color: var(--text);
         padding: 3px 9px;
         font-size: 0.74rem;
@@ -326,7 +342,7 @@
       }
 
       .momentum-mini-table tbody tr:hover {
-        background: rgba(118, 193, 255, 0.1);
+        background: var(--row-hover);
       }
 
       .momentum-mini-table .name-compact {
@@ -340,7 +356,7 @@
         border-radius: 14px;
         padding: 8px 11px 9px;
         margin-bottom: 10px;
-        background: #ffffff;
+        background: var(--card-bg);
         box-shadow: var(--shadow);
       }
 
@@ -388,7 +404,7 @@
         border: 1px solid var(--line);
         border-radius: 12px;
         overflow: hidden;
-        background: #ffffff;
+        background: var(--card-bg);
         box-shadow: var(--shadow);
       }
 
@@ -409,7 +425,7 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 860px;
+        min-width: 800px;
         font-variant-numeric: tabular-nums;
       }
 
@@ -423,7 +439,7 @@
         color: var(--muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        padding: 5px 6px;
+        padding: 5px 5px;
         white-space: nowrap;
       }
 
@@ -446,7 +462,7 @@
 
       tbody td {
         border-bottom: 1px solid var(--line);
-        padding: 5px 6px;
+        padding: 5px 5px;
         font-size: 0.8rem;
         font-weight: 400;
         white-space: nowrap;
@@ -461,15 +477,15 @@
       }
 
       tbody tr:nth-child(even) {
-        background: rgba(125, 161, 201, 0.045);
+        background: var(--row-alt);
       }
 
       tbody tr:hover {
-        background: rgba(118, 193, 255, 0.1);
+        background: var(--row-hover);
       }
 
       tbody tr.row-selected {
-        background: rgba(118, 193, 255, 0.18);
+        background: var(--row-selected);
         outline: 1px solid var(--accent);
       }
 
@@ -575,7 +591,7 @@
         border-radius: 14px;
         padding: 7px 9px;
         margin-bottom: 0;
-        background: #ffffff;
+        background: var(--card-bg);
         box-shadow: var(--shadow);
       }
 
@@ -653,7 +669,7 @@
         border: 1px solid var(--line);
         border-radius: 10px;
         padding: 5px;
-        background: rgba(148, 163, 184, 0.08);
+        background: var(--status-tile-bg);
       }
 
       .status-tile-label {
@@ -735,12 +751,8 @@
         border-radius: 999px;
         font-size: 0.78rem;
         border: 1px solid var(--line);
-        background: rgba(15, 23, 42, 0.08);
+        background: var(--status-pill-bg);
         white-space: nowrap;
-      }
-
-      html[data-theme="dark"] .status-pill {
-        background: rgba(148, 163, 184, 0.12);
       }
 
       .status-pill-dot {
@@ -798,7 +810,7 @@
         border-radius: 14px;
         overflow: hidden;
         box-shadow: var(--shadow);
-        background: #ffffff;
+        background: var(--card-bg);
         min-width: 0;
         width: 100%;
         max-width: 100%;
@@ -1092,19 +1104,18 @@
       };
 
       const TABLE_COLUMNS = [
-        { key: "ticker", label: "Ticker", sortable: true, numeric: false, type: "text", width: 70 },
-        { key: "trend_grade", label: "Grade", sortable: true, numeric: false, type: "grade", width: 56 },
-        { key: "name", label: "Name", sortable: true, numeric: false, type: "text", width: 190 },
-        { key: "last", label: "Price", sortable: true, numeric: true, pct: false, width: 72 },
-        { key: "intra_pct", label: "Intra%", sortable: true, numeric: true, pct: true, width: 70 },
-        { key: "d1_pct", label: "1D%", sortable: true, numeric: true, pct: true, width: 64 },
-        { key: "d5_pct", label: "5D%", sortable: true, numeric: true, pct: true, width: 64 },
-        { key: "d20_pct", label: "20D%", sortable: true, numeric: true, pct: true, width: 68 },
-        { key: "atr_pct", label: "ATR", sortable: true, numeric: true, pct: true, width: 60 },
-        { key: "dist50_atr", label: "D50/ATR", sortable: true, numeric: true, pct: false, width: 74 },
-        { key: "rs1m", label: "RS1M", sortable: true, numeric: true, pct: false, decimals: 3, width: 66 },
-        { key: "mini_rs_chart", label: "Mini", sortable: false, numeric: false, type: "spark", width: 66 },
-        { key: "leveraged", label: "LETF", sortable: true, numeric: false, type: "letf", width: 102 },
+        { key: "ticker", label: "Ticker", sortable: true, numeric: false, type: "text", width: 68 },
+        { key: "trend_grade", label: "Grade", sortable: true, numeric: false, type: "grade", width: 54 },
+        { key: "name", label: "Name", sortable: true, numeric: false, type: "text", width: 186 },
+        { key: "last", label: "Price", sortable: true, numeric: true, pct: false, width: 68 },
+        { key: "intra_pct", label: "Intra%", sortable: true, numeric: true, pct: true, width: 66 },
+        { key: "d1_pct", label: "1D%", sortable: true, numeric: true, pct: true, width: 60 },
+        { key: "d5_pct", label: "5D%", sortable: true, numeric: true, pct: true, width: 60 },
+        { key: "d20_pct", label: "20D%", sortable: true, numeric: true, pct: true, width: 64 },
+        { key: "atr_pct", label: "ATR", sortable: true, numeric: true, pct: true, width: 56 },
+        { key: "dist50_atr", label: "D50/ATR", sortable: true, numeric: true, pct: false, width: 70 },
+        { key: "rs1m", label: "RS1M", sortable: true, numeric: true, pct: false, decimals: 3, width: 62 },
+        { key: "mini_rs_chart", label: "Mini", sortable: false, numeric: false, type: "spark", width: 62 },
       ];
 
       const state = {
@@ -1122,7 +1133,7 @@
         document.documentElement.setAttribute("data-theme", theme);
         localStorage.setItem("cc_theme", theme);
         const toggle = document.getElementById("themeToggle");
-        toggle.textContent = theme === "dark" ? "Light Theme" : "Dark Mode";
+        toggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
         if (state.selectedTicker) {
           renderTradingView(state.selectedTicker);
         }
