@@ -51,14 +51,29 @@
 
       html,
       body {
+        margin: 0;
+        padding: 0;
         background: #f5eee9;
       }
 
       body {
-        margin: 0;
         font-family: "Manrope", "Segoe UI", sans-serif;
         color: var(--text);
         overflow-x: hidden;
+      }
+
+      .dashboard {
+        background: #f5eee9;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 14px;
+      }
+
+      .pill {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
       }
 
       .shell {
@@ -129,7 +144,7 @@
       }
 
       .leadership {
-        background: linear-gradient(130deg, var(--surface), var(--surface-2));
+        background: #ffffff;
         border: 1px solid var(--line);
         border-radius: 14px;
         box-shadow: var(--shadow);
@@ -158,8 +173,8 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        border: 1px solid var(--line);
-        background: rgba(125, 161, 201, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: #ffffff;
         border-radius: 999px;
         padding: 3px 9px 3px 6px;
         font-size: 0.8rem;
@@ -209,7 +224,7 @@
         border-radius: 14px;
         padding: 10px 12px;
         margin-bottom: 10px;
-        background: var(--surface);
+        background: #ffffff;
         box-shadow: var(--shadow);
       }
 
@@ -255,9 +270,9 @@
       }
 
       .momentum-pill {
-        border: 1px solid var(--line);
+        border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 999px;
-        background: rgba(125, 161, 201, 0.08);
+        background: #ffffff;
         color: var(--text);
         padding: 3px 9px;
         font-size: 0.74rem;
@@ -320,7 +335,7 @@
         border-radius: 14px;
         padding: 8px 11px 9px;
         margin-bottom: 10px;
-        background: var(--surface);
+        background: #ffffff;
         box-shadow: var(--shadow);
       }
 
@@ -368,7 +383,7 @@
         border: 1px solid var(--line);
         border-radius: 12px;
         overflow: hidden;
-        background: var(--surface);
+        background: #ffffff;
         box-shadow: var(--shadow);
       }
 
@@ -555,7 +570,7 @@
         border-radius: 14px;
         padding: 7px 9px;
         margin-bottom: 0;
-        background: var(--surface);
+        background: #ffffff;
         box-shadow: var(--shadow);
       }
 
@@ -775,7 +790,7 @@
         border-radius: 14px;
         overflow: hidden;
         box-shadow: var(--shadow);
-        background: var(--surface);
+        background: #ffffff;
       }
 
       .chart-head {
@@ -840,7 +855,7 @@
     </style>
   </head>
   <body>
-    <div class="shell">
+    <div class="shell dashboard">
       <header class="top-header">
         <div class="title-wrap">
           <p class="kicker">MARKET TAPE</p>
@@ -854,7 +869,7 @@
 
       <div class="layout">
         <section class="left-panel">
-          <section class="macro-events-card macro-events-top" aria-label="Macro events">
+          <section class="macro-events-card macro-events-top card" aria-label="Macro events">
             <header>
               <h2>Macro Events</h2>
               <span class="macro-subtitle">Next 5 scheduled</span>
@@ -862,7 +877,7 @@
             <ul id="eventsList"></ul>
           </section>
 
-          <section class="leadership" aria-label="Relative strength leadership strip">
+          <section class="leadership card" aria-label="Relative strength leadership strip">
             <article class="leader-block">
               <h2>Top 3 Sectors by RS</h2>
               <div class="leader-row" id="sectorLeaders"></div>
@@ -873,7 +888,7 @@
             </article>
           </section>
 
-          <section class="momentum-universe-card" aria-label="Momentum leaders universe">
+          <section class="momentum-universe-card card" aria-label="Momentum leaders universe">
             <header class="momentum-universe-head">
               <div>
                 <h2 id="momentumUniverseTitle">Momentum Leaders</h2>
@@ -919,7 +934,7 @@
         </section>
 
         <aside class="right-panel">
-          <div class="status-card" id="marketStatusCard">
+          <div class="status-card card" id="marketStatusCard">
             <div class="status-header">
               <h2>Market Status</h2>
               <span class="guidance-pill status-sub" id="statusGuidanceLabel">Loading...</span>
@@ -969,7 +984,7 @@
             </div>
           </div>
 
-          <div class="chart-card">
+          <div class="chart-card card">
             <div class="chart-head">
               <h2>TradingView</h2>
               <span class="muted" id="selectedTickerLabel">SPY</span>
@@ -1236,7 +1251,7 @@
           }
           list.slice(0, 3).forEach((item) => {
             const pill = document.createElement("span");
-            pill.className = "leader-pill";
+            pill.className = "leader-pill pill";
             pill.title = item.name || item.ticker;
             const prefix = iconMap?.[item.ticker] ? `${iconMap[item.ticker]} ` : "";
             pill.innerHTML = `${prefix}<strong>${item.ticker}</strong> ${fmt(item.rs1m, 3)}`;
@@ -1312,7 +1327,7 @@
           pillRows.forEach((row) => {
             const button = document.createElement("button");
             button.type = "button";
-            button.className = "momentum-pill";
+            button.className = "momentum-pill pill";
             button.title = `${row.name || row.ticker} • TV: ${row.tradingview_symbol || row.ticker}`;
             button.innerHTML = `<strong>${row.ticker}</strong><span class="rs">${fmt(row.rs1m, 3)}</span>`;
             button.addEventListener("click", () => {
@@ -1690,7 +1705,7 @@
 
         groups.forEach((group, groupIndex) => {
           const section = document.createElement("section");
-          section.className = "group";
+          section.className = "group card";
           const displayName = GROUP_LABEL_OVERRIDES[group.name] || group.name;
 
           const title = document.createElement("h3");
