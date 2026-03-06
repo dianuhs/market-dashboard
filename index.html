@@ -77,7 +77,8 @@
       }
 
       .shell {
-        max-width: 1560px;
+        max-width: 1280px;
+        width: 100%;
         margin: 0 auto;
         padding: 18px 20px 22px;
       }
@@ -211,8 +212,12 @@
       .layout {
         display: grid;
         gap: 14px;
-        grid-template-columns: minmax(0, 1fr) 430px;
+        grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.95fr);
         align-items: start;
+      }
+
+      .layout > * {
+        min-width: 0;
       }
 
       .left-panel {
@@ -776,6 +781,9 @@
         overflow-x: hidden;
         padding-bottom: 8px;
         align-self: start;
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -785,12 +793,15 @@
         display: flex;
         flex-direction: column;
         flex: 1 1 0;
-        min-height: 400px;
+        min-height: 360px;
         border: 1px solid var(--line);
         border-radius: 14px;
         overflow: hidden;
         box-shadow: var(--shadow);
         background: #ffffff;
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
       }
 
       .chart-head {
@@ -812,8 +823,19 @@
 
       #tvChart {
         flex: 1 1 auto;
-        min-height: 360px;
+        min-height: 320px;
         height: 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      #tvChart > div,
+      #tvChart iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
       }
 
       @media (max-width: 1180px) {
