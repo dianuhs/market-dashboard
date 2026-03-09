@@ -478,10 +478,21 @@ def download_history(tickers: list[str], *, period: str, interval: str) -> dict[
 
     missing = [ticker for ticker in tickers if ticker not in frames or frames[ticker].empty]
     for ticker in missing:
-        fallback = yf.Ticker(ticker).history(period=period, interval=interval, auto_adjust=False)
-        if fallback is None or fallback.empty:
+        try:
+            fallback = yf.Ticker(ticker).history(period=period, interval=interval, auto_adjust=False)
+        except Exception as exc:
+            print(f"[warn] fallback history fetch failed for {ticker}: {exc}")
             continue
-        frames[ticker] = _standardize_frame(fallback.dropna(how="all"))
+
+        if fallback is None or fallback.empty:
+            print(f"[warn] fallback history empty for {ticker}")
+            continue
+
+        standardized = _standardize_frame(fallback.dropna(how="all"))
+        if standardized.empty:
+            print(f"[warn] fallback history empty after cleanup for {ticker}")
+            continue
+        frames[ticker] = standardized
 
     return frames
 
