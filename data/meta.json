@@ -1,6 +1,6 @@
 {
   "app": "CLOUD & CAPITAL - Market Tape",
-  "generated_at_utc": "2026-03-26T20:24:14+00:00",
+  "generated_at_utc": "2026-03-26T20:55:46+00:00",
   "benchmark": "SPY",
   "group_count": 7,
   "instrument_count": 50,
@@ -9,7 +9,7 @@
       {
         "ticker": "XLE",
         "name": "State Street Energy Select Sector SPDR ETF",
-        "rs1m": 3.922
+        "rs1m": 3.921
       },
       {
         "ticker": "XLU",
@@ -26,12 +26,12 @@
       {
         "ticker": "EWZ",
         "name": "iShares MSCI Brazil ETF",
-        "rs1m": 0.046
+        "rs1m": 0.048
       },
       {
         "ticker": "FXI",
         "name": "iShares China Large-Cap ETF",
-        "rs1m": -0.02
+        "rs1m": -0.026
       },
       {
         "ticker": "EWC",
@@ -69,7 +69,7 @@
     "tickers_total": 343,
     "tickers_used": 337,
     "filtered_out_count": 6,
-    "generated_at_utc": "2026-03-26T20:24:14+00:00"
+    "generated_at_utc": "2026-03-26T20:55:46+00:00"
   },
   "leaderboard": {
     "leaders": [
@@ -566,14 +566,14 @@
         "tradingview_symbol": "NYSE:DIS"
       },
       {
-        "ticker": "SYK",
-        "short_name": "Stryker Corporation",
-        "name": "Stryker Corporation",
-        "price": 332.59,
-        "intra_pct": 1.51,
-        "rs1m": -1.057,
+        "ticker": "EFX",
+        "short_name": "Equifax Inc",
+        "name": "Equifax Inc.",
+        "price": 174.51,
+        "intra_pct": 1.14,
+        "rs1m": -1.054,
         "trend_grade": "C",
-        "tradingview_symbol": "NYSE:SYK"
+        "tradingview_symbol": "NYSE:EFX"
       }
     ],
     "universe_count": 337
@@ -1073,14 +1073,14 @@
         "tradingview_symbol": "NYSE:DIS"
       },
       {
-        "ticker": "SYK",
-        "short_name": "Stryker Corporation",
-        "name": "Stryker Corporation",
-        "price": 332.59,
-        "intra_pct": 1.51,
-        "rs1m": -1.057,
+        "ticker": "EFX",
+        "short_name": "Equifax Inc",
+        "name": "Equifax Inc.",
+        "price": 174.51,
+        "intra_pct": 1.14,
+        "rs1m": -1.054,
         "trend_grade": "C",
-        "tradingview_symbol": "NYSE:SYK"
+        "tradingview_symbol": "NYSE:EFX"
       }
     ]
   },
